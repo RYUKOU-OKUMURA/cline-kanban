@@ -24,13 +24,20 @@ import { TaskPromptComposer } from "@/components/task-prompt-composer";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogBody, DialogFooter, DialogHeader } from "@/components/ui/dialog";
 import { LocalStorageKey } from "@/storage/local-storage-store";
-import type { TaskAutoReviewMode, TaskImage } from "@/types";
+import type { TaskAutoReviewMode, TaskImage, TaskPriority } from "@/types";
 import { isMacPlatform, pasteShortcutLabel } from "@/utils/platform";
 import { useRawLocalStorageValue } from "@/utils/react-use";
 
 import { useTranslation } from "@/i18n";
 
 const AUTO_REVIEW_MODE_OPTION_VALUES: readonly TaskAutoReviewMode[] = ["commit", "pr", "move_to_trash"];
+
+const PRIORITY_OPTIONS: Array<{ value: TaskPriority | ""; label: string }> = [
+	{ value: "", label: "No priority" },
+	{ value: "high", label: "High" },
+	{ value: "medium", label: "Medium" },
+	{ value: "low", label: "Low" },
+];
 
 type TaskCreateStartAction = "start" | "start_and_open";
 
@@ -108,6 +115,8 @@ export function TaskCreateDialog({
 	onAutoReviewEnabledChange,
 	autoReviewMode,
 	onAutoReviewModeChange,
+	priority,
+	onPriorityChange,
 	startInPlanModeDisabled = false,
 	workspaceId,
 	branchRef,
@@ -131,6 +140,8 @@ export function TaskCreateDialog({
 	onAutoReviewEnabledChange: (value: boolean) => void;
 	autoReviewMode: TaskAutoReviewMode;
 	onAutoReviewModeChange: (value: TaskAutoReviewMode) => void;
+	priority: TaskPriority | undefined;
+	onPriorityChange: (value: TaskPriority | undefined) => void;
 	startInPlanModeDisabled?: boolean;
 	workspaceId: string | null;
 	branchRef: string;
@@ -532,6 +543,31 @@ export function TaskCreateDialog({
 								style={{ width: "16ch", maxWidth: "100%" }}
 							>
 								{autoReviewModeOptions.map((option) => (
+									<option key={option.value} value={option.value}>
+										{option.label}
+									</option>
+								))}
+							</select>
+							<ChevronDown
+								size={14}
+								className="pointer-events-none absolute right-1.5 top-1/2 -translate-y-1/2 text-text-secondary"
+							/>
+						</div>
+					</div>
+
+					<div className="flex items-center gap-2">
+						<span className="text-[12px] text-text-primary">Priority</span>
+						<div className="relative inline-flex">
+							<select
+								value={priority ?? ""}
+								onChange={(e) => {
+									const val = e.currentTarget.value;
+									onPriorityChange(val === "" ? undefined : (val as TaskPriority));
+								}}
+								className="h-7 appearance-none rounded-md border border-border-bright bg-surface-2 pl-2 pr-7 text-[12px] text-text-primary cursor-pointer focus:border-border-focus focus:outline-none"
+								style={{ width: "14ch" }}
+							>
+								{PRIORITY_OPTIONS.map((option) => (
 									<option key={option.value} value={option.value}>
 										{option.label}
 									</option>

@@ -11,7 +11,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { Tooltip } from "@/components/ui/tooltip";
 import type { RuntimeTaskSessionSummary } from "@/runtime/types";
 import { useTaskWorkspaceSnapshotValue } from "@/stores/workspace-metadata-store";
-import type { BoardCard as BoardCardModel, BoardColumnId } from "@/types";
+import type { BoardCard as BoardCardModel, BoardColumnId, TaskPriority } from "@/types";
 import { getTaskAutoReviewCancelButtonLabel } from "@/types";
 import { formatPathForDisplay } from "@/utils/path-display";
 import { useMeasure } from "@/utils/react-use";
@@ -23,6 +23,24 @@ import {
 	truncateTaskPromptLabel,
 } from "@/utils/task-prompt";
 import { DEFAULT_TEXT_MEASURE_FONT, measureTextWidth, readElementFontShorthand } from "@/utils/text-measure";
+
+const PRIORITY_BADGE_CONFIG: Record<TaskPriority, { label: string; textClass: string; bgColor: string }> = {
+	high: { label: "High", textClass: "text-status-red", bgColor: "rgba(248, 81, 73, 0.12)" },
+	medium: { label: "Med", textClass: "text-status-orange", bgColor: "rgba(210, 153, 34, 0.12)" },
+	low: { label: "Low", textClass: "text-status-blue", bgColor: "rgba(76, 154, 255, 0.12)" },
+};
+
+function PriorityBadge({ priority }: { priority: TaskPriority }): React.ReactElement {
+	const config = PRIORITY_BADGE_CONFIG[priority];
+	return (
+		<span
+			className={cn("text-[10px] font-semibold leading-none px-1 py-0.5 rounded-sm shrink-0", config.textClass)}
+			style={{ backgroundColor: config.bgColor }}
+		>
+			{config.label}
+		</span>
+	);
+}
 
 interface CardSessionActivity {
 	dotColor: string;
@@ -513,6 +531,9 @@ export function BoardCard({
 										{displayPromptSplit.title}
 									</p>
 								</div>
+								{card.priority && !isTrashCard ? (
+									<PriorityBadge priority={card.priority} />
+								) : null}
 								{columnId === "backlog" ? (
 									<Button
 										icon={<Play size={14} />}

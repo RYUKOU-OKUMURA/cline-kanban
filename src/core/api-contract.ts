@@ -79,6 +79,9 @@ export type RuntimeBoardColumnId = z.infer<typeof runtimeBoardColumnIdSchema>;
 export const runtimeTaskAutoReviewModeSchema = z.enum(["commit", "pr", "move_to_trash"]);
 export type RuntimeTaskAutoReviewMode = z.infer<typeof runtimeTaskAutoReviewModeSchema>;
 
+export const runtimeTaskPrioritySchema = z.enum(["high", "medium", "low"]);
+export type RuntimeTaskPriority = z.infer<typeof runtimeTaskPrioritySchema>;
+
 export const runtimeTaskImageSchema = z.object({
 	id: z.string(),
 	data: z.string(),
@@ -95,6 +98,7 @@ export const runtimeBoardCardSchema = z.object({
 	autoReviewMode: runtimeTaskAutoReviewModeSchema.optional(),
 	images: z.array(runtimeTaskImageSchema).optional(),
 	baseRef: z.string(),
+	priority: runtimeTaskPrioritySchema.optional(),
 	createdAt: z.number(),
 	updatedAt: z.number(),
 });

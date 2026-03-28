@@ -10,7 +10,7 @@ import {
 import type { RuntimeAgentId } from "@/runtime/types";
 import { addTaskToColumnWithResult, findCardSelection, updateTask } from "@/state/board-state";
 import { toTelemetrySelectedAgentId, trackTaskCreated } from "@/telemetry/events";
-import type { BoardCard, BoardData, TaskAutoReviewMode, TaskImage } from "@/types";
+import type { BoardCard, BoardData, TaskAutoReviewMode, TaskImage, TaskPriority } from "@/types";
 import { resolveTaskAutoReviewMode } from "@/types";
 import { useBooleanLocalStorageValue, useRawLocalStorageValue } from "@/utils/react-use";
 
@@ -45,6 +45,8 @@ export interface UseTaskEditorResult {
 	setNewTaskAutoReviewEnabled: Dispatch<SetStateAction<boolean>>;
 	newTaskAutoReviewMode: TaskAutoReviewMode;
 	setNewTaskAutoReviewMode: Dispatch<SetStateAction<TaskAutoReviewMode>>;
+	newTaskPriority: TaskPriority | undefined;
+	setNewTaskPriority: Dispatch<SetStateAction<TaskPriority | undefined>>;
 	isNewTaskStartInPlanModeDisabled: boolean;
 	newTaskBranchRef: string;
 	setNewTaskBranchRef: Dispatch<SetStateAction<string>>;
@@ -59,6 +61,8 @@ export interface UseTaskEditorResult {
 	setEditTaskAutoReviewEnabled: Dispatch<SetStateAction<boolean>>;
 	editTaskAutoReviewMode: TaskAutoReviewMode;
 	setEditTaskAutoReviewMode: Dispatch<SetStateAction<TaskAutoReviewMode>>;
+	editTaskPriority: TaskPriority | undefined;
+	setEditTaskPriority: Dispatch<SetStateAction<TaskPriority | undefined>>;
 	isEditTaskStartInPlanModeDisabled: boolean;
 	editTaskBranchRef: string;
 	setEditTaskBranchRef: Dispatch<SetStateAction<string>>;
@@ -99,6 +103,7 @@ export function useTaskEditor({
 		"commit",
 		normalizeStoredTaskAutoReviewMode,
 	);
+	const [newTaskPriority, setNewTaskPriority] = useState<TaskPriority | undefined>(undefined);
 	const isNewTaskStartInPlanModeDisabled = newTaskAutoReviewEnabled && newTaskAutoReviewMode === "move_to_trash";
 	const [newTaskBranchRef, setNewTaskBranchRef] = useState("");
 	const [lastCreatedTaskBranchByProjectId, setLastCreatedTaskBranchByProjectId] = useState<Record<string, string>>({});
@@ -108,6 +113,7 @@ export function useTaskEditor({
 	const [editTaskStartInPlanMode, setEditTaskStartInPlanMode] = useState(false);
 	const [editTaskAutoReviewEnabled, setEditTaskAutoReviewEnabled] = useState(false);
 	const [editTaskAutoReviewMode, setEditTaskAutoReviewMode] = useState<TaskAutoReviewMode>("commit");
+	const [editTaskPriority, setEditTaskPriority] = useState<TaskPriority | undefined>(undefined);
 	const isEditTaskStartInPlanModeDisabled = editTaskAutoReviewEnabled && editTaskAutoReviewMode === "move_to_trash";
 	const [editTaskBranchRef, setEditTaskBranchRef] = useState("");
 
@@ -181,6 +187,7 @@ export function useTaskEditor({
 			setEditTaskStartInPlanMode(false);
 			setEditTaskAutoReviewEnabled(false);
 			setEditTaskAutoReviewMode("commit");
+			setEditTaskPriority(undefined);
 			setEditTaskImages([]);
 			setEditTaskBranchRef("");
 		}
@@ -215,6 +222,7 @@ export function useTaskEditor({
 			setEditTaskStartInPlanMode(task.startInPlanMode);
 			setEditTaskAutoReviewEnabled(task.autoReviewEnabled === true);
 			setEditTaskAutoReviewMode(resolveTaskAutoReviewMode(task.autoReviewMode));
+			setEditTaskPriority(task.priority);
 			const fallbackBranch = task.baseRef || resolvedDefaultTaskBranchRef;
 			setEditTaskBranchRef(fallbackBranch);
 		},
@@ -227,6 +235,7 @@ export function useTaskEditor({
 		setEditTaskStartInPlanMode(false);
 		setEditTaskAutoReviewEnabled(false);
 		setEditTaskAutoReviewMode("commit");
+		setEditTaskPriority(undefined);
 		setEditTaskImages([]);
 		setEditTaskBranchRef("");
 	}, []);
@@ -254,6 +263,7 @@ export function useTaskEditor({
 				autoReviewMode: editTaskAutoReviewMode,
 				images: editTaskImages,
 				baseRef,
+				priority: editTaskPriority,
 			});
 			return updated.updated ? updated.board : currentBoard;
 		});
@@ -261,6 +271,7 @@ export function useTaskEditor({
 		setEditTaskPrompt("");
 		setEditTaskAutoReviewEnabled(false);
 		setEditTaskAutoReviewMode("commit");
+		setEditTaskPriority(undefined);
 		setEditTaskImages([]);
 		return savedTaskId;
 	}, [
@@ -269,6 +280,7 @@ export function useTaskEditor({
 		editTaskBranchRef,
 		editTaskPrompt,
 		editTaskImages,
+		editTaskPriority,
 		editTaskStartInPlanMode,
 		editingTaskId,
 		resolvedDefaultTaskBranchRef,
@@ -300,6 +312,7 @@ export function useTaskEditor({
 				autoReviewMode: newTaskAutoReviewMode,
 				images: newTaskImages,
 				baseRef,
+				priority: newTaskPriority,
 			});
 			setBoard(created.board);
 			trackTaskCreated({
@@ -330,6 +343,7 @@ export function useTaskEditor({
 			newTaskBranchRef,
 			newTaskImages,
 			newTaskPrompt,
+			newTaskPriority,
 			newTaskStartInPlanMode,
 			resolvedDefaultTaskBranchRef,
 			selectedAgentId,
@@ -357,6 +371,7 @@ export function useTaskEditor({
 					autoReviewMode: newTaskAutoReviewMode,
 					images: newTaskImages,
 					baseRef,
+					priority: newTaskPriority,
 				});
 				updatedBoard = created.board;
 				createdTaskIds.push(created.task.id);
@@ -391,6 +406,7 @@ export function useTaskEditor({
 			newTaskAutoReviewMode,
 			newTaskBranchRef,
 			newTaskImages,
+			newTaskPriority,
 			newTaskStartInPlanMode,
 			resolvedDefaultTaskBranchRef,
 			selectedAgentId,
@@ -405,8 +421,10 @@ export function useTaskEditor({
 		setEditTaskStartInPlanMode(false);
 		setEditTaskAutoReviewEnabled(false);
 		setEditTaskAutoReviewMode("commit");
+		setEditTaskPriority(undefined);
 		setEditTaskImages([]);
 		setEditTaskBranchRef("");
+		setNewTaskPriority(undefined);
 		setNewTaskImages([]);
 	}, []);
 
@@ -422,6 +440,8 @@ export function useTaskEditor({
 		setNewTaskAutoReviewEnabled,
 		newTaskAutoReviewMode,
 		setNewTaskAutoReviewMode,
+		newTaskPriority,
+		setNewTaskPriority,
 		isNewTaskStartInPlanModeDisabled,
 		newTaskBranchRef,
 		setNewTaskBranchRef,
@@ -436,6 +456,8 @@ export function useTaskEditor({
 		setEditTaskAutoReviewEnabled,
 		editTaskAutoReviewMode,
 		setEditTaskAutoReviewMode,
+		editTaskPriority,
+		setEditTaskPriority,
 		isEditTaskStartInPlanModeDisabled,
 		editTaskBranchRef,
 		setEditTaskBranchRef,

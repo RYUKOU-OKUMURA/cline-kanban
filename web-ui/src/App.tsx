@@ -286,6 +286,8 @@ export default function App(): ReactElement {
 		setNewTaskAutoReviewEnabled,
 		newTaskAutoReviewMode,
 		setNewTaskAutoReviewMode,
+		newTaskPriority,
+		setNewTaskPriority,
 		isNewTaskStartInPlanModeDisabled,
 		newTaskBranchRef,
 		setNewTaskBranchRef,
@@ -300,6 +302,8 @@ export default function App(): ReactElement {
 		setEditTaskAutoReviewEnabled,
 		editTaskAutoReviewMode,
 		setEditTaskAutoReviewMode,
+		editTaskPriority,
+		setEditTaskPriority,
 		isEditTaskStartInPlanModeDisabled,
 		editTaskBranchRef,
 		setEditTaskBranchRef,
@@ -732,6 +736,8 @@ export default function App(): ReactElement {
 			onAutoReviewEnabledChange={setEditTaskAutoReviewEnabled}
 			autoReviewMode={editTaskAutoReviewMode}
 			onAutoReviewModeChange={setEditTaskAutoReviewMode}
+			priority={editTaskPriority}
+			onPriorityChange={setEditTaskPriority}
 			workspaceId={currentProjectId}
 			branchRef={editTaskBranchRef}
 			branchOptions={createTaskBranchOptions}
@@ -1056,6 +1062,8 @@ export default function App(): ReactElement {
 				onAutoReviewEnabledChange={setNewTaskAutoReviewEnabled}
 				autoReviewMode={newTaskAutoReviewMode}
 				onAutoReviewModeChange={setNewTaskAutoReviewMode}
+				priority={newTaskPriority}
+				onPriorityChange={setNewTaskPriority}
 				workspaceId={currentProjectId}
 				branchRef={newTaskBranchRef}
 				branchOptions={createTaskBranchOptions}

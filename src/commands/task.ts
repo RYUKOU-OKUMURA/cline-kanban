@@ -1,7 +1,12 @@
 import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
 import type { Command } from "commander";
 
-import type { RuntimeBoardCard, RuntimeBoardDependency, RuntimeWorkspaceStateResponse } from "../core/api-contract";
+import type {
+	RuntimeBoardCard,
+	RuntimeBoardDependency,
+	RuntimeTaskPriority,
+	RuntimeWorkspaceStateResponse,
+} from "../core/api-contract";
 import { buildKanbanRuntimeUrl, getKanbanRuntimeOrigin } from "../core/runtime-endpoint";
 import {
 	addTaskDependency,
@@ -68,6 +73,16 @@ function parseAutoReviewMode(value: string | undefined): "commit" | "pr" | "move
 		return value;
 	}
 	throw new Error(`Invalid auto review mode "${value}". Expected: commit, pr, move_to_trash.`);
+}
+
+function parsePriority(value: string | undefined): RuntimeTaskPriority | undefined {
+	if (value === undefined) {
+		return undefined;
+	}
+	if (value === "high" || value === "medium" || value === "low") {
+		return value;
+	}
+	throw new Error(`Invalid priority "${value}". Expected: high, medium, low.`);
 }
 
 function resolveTaskCommandTarget(input: TaskCommandTarget, commandName: string): ResolvedTaskCommandTarget {
@@ -187,6 +202,7 @@ function formatTaskRecord(state: RuntimeWorkspaceStateResponse, task: RuntimeBoa
 		prompt: task.prompt,
 		column: columnId,
 		baseRef: task.baseRef,
+		priority: task.priority ?? null,
 		startInPlanMode: task.startInPlanMode,
 		autoReviewEnabled: task.autoReviewEnabled === true,
 		autoReviewMode: task.autoReviewMode ?? "commit",
@@ -317,6 +333,7 @@ async function createTask(input: {
 	startInPlanMode?: boolean;
 	autoReviewEnabled?: boolean;
 	autoReviewMode?: "commit" | "pr" | "move_to_trash";
+	priority?: RuntimeTaskPriority;
 }): Promise<JsonRecord> {
 	const workspaceRepoPath = await resolveWorkspaceRepoPath(input.projectPath, input.cwd);
 	const workspaceId = await ensureRuntimeWorkspace(workspaceRepoPath);
@@ -335,6 +352,7 @@ async function createTask(input: {
 				autoReviewEnabled: input.autoReviewEnabled,
 				autoReviewMode: input.autoReviewMode,
 				baseRef: resolvedBaseRef,
+				priority: input.priority,
 			},
 			() => globalThis.crypto.randomUUID(),
 		);
@@ -352,6 +370,7 @@ async function createTask(input: {
 			workspacePath: workspaceRepoPath,
 			prompt: created.prompt,
 			baseRef: created.baseRef,
+			priority: created.priority ?? null,
 			startInPlanMode: created.startInPlanMode,
 			autoReviewEnabled: created.autoReviewEnabled === true,
 			autoReviewMode: created.autoReviewMode ?? "commit",
@@ -368,13 +387,15 @@ async function updateTaskCommand(input: {
 	startInPlanMode?: boolean;
 	autoReviewEnabled?: boolean;
 	autoReviewMode?: "commit" | "pr" | "move_to_trash";
+	priority?: RuntimeTaskPriority;
 }): Promise<JsonRecord> {
 	if (
 		input.prompt === undefined &&
 		input.baseRef === undefined &&
 		input.startInPlanMode === undefined &&
 		input.autoReviewEnabled === undefined &&
-		input.autoReviewMode === undefined
+		input.autoReviewMode === undefined &&
+		input.priority === undefined
 	) {
 		throw new Error("task update requires at least one field to change.");
 	}
@@ -394,6 +415,7 @@ async function updateTaskCommand(input: {
 			startInPlanMode: input.startInPlanMode ?? taskRecord.task.startInPlanMode,
 			autoReviewEnabled: input.autoReviewEnabled ?? taskRecord.task.autoReviewEnabled === true,
 			autoReviewMode: input.autoReviewMode ?? taskRecord.task.autoReviewMode ?? "commit",
+			priority: input.priority,
 		});
 		if (!updatedTask.updated || !updatedTask.task) {
 			throw new Error(`Task "${input.taskId}" could not be updated.`);
@@ -902,6 +924,7 @@ export function registerTaskCommand(program: Command): void {
 		.option("--start-in-plan-mode [value]", "Set plan mode (true|false). Flag-only implies true.")
 		.option("--auto-review-enabled [value]", "Enable auto-review behavior (true|false). Flag-only implies true.")
 		.option("--auto-review-mode <mode>", "Auto-review mode: commit | pr | move_to_trash.", parseAutoReviewMode)
+		.option("--priority <level>", "Task priority: high | medium | low.", parsePriority)
 		.action(
 			async (options: {
 				prompt: string;
@@ -910,6 +933,7 @@ export function registerTaskCommand(program: Command): void {
 				startInPlanMode?: unknown;
 				autoReviewEnabled?: unknown;
 				autoReviewMode?: "commit" | "pr" | "move_to_trash";
+				priority?: RuntimeTaskPriority;
 			}) => {
 				await runTaskCommand(
 					async () =>
@@ -921,6 +945,7 @@ export function registerTaskCommand(program: Command): void {
 							startInPlanMode: parseOptionalBooleanOption(options.startInPlanMode, "--start-in-plan-mode"),
 							autoReviewEnabled: parseOptionalBooleanOption(options.autoReviewEnabled, "--auto-review-enabled"),
 							autoReviewMode: options.autoReviewMode,
+							priority: options.priority,
 						}),
 				);
 			},
@@ -936,6 +961,7 @@ export function registerTaskCommand(program: Command): void {
 		.option("--start-in-plan-mode [value]", "Set plan mode (true|false). Flag-only implies true.")
 		.option("--auto-review-enabled [value]", "Enable auto-review behavior (true|false). Flag-only implies true.")
 		.option("--auto-review-mode <mode>", "Auto-review mode: commit | pr | move_to_trash.", parseAutoReviewMode)
+		.option("--priority <level>", "Task priority: high | medium | low.", parsePriority)
 		.action(
 			async (options: {
 				taskId: string;
@@ -945,6 +971,7 @@ export function registerTaskCommand(program: Command): void {
 				startInPlanMode?: unknown;
 				autoReviewEnabled?: unknown;
 				autoReviewMode?: "commit" | "pr" | "move_to_trash";
+				priority?: RuntimeTaskPriority;
 			}) => {
 				await runTaskCommand(
 					async () =>
@@ -957,6 +984,7 @@ export function registerTaskCommand(program: Command): void {
 							startInPlanMode: parseOptionalBooleanOption(options.startInPlanMode, "--start-in-plan-mode"),
 							autoReviewEnabled: parseOptionalBooleanOption(options.autoReviewEnabled, "--auto-review-enabled"),
 							autoReviewMode: options.autoReviewMode,
+							priority: options.priority,
 						}),
 				);
 			},

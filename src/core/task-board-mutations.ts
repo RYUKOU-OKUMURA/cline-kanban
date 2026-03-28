@@ -5,6 +5,7 @@ import type {
 	RuntimeBoardDependency,
 	RuntimeTaskAutoReviewMode,
 	RuntimeTaskImage,
+	RuntimeTaskPriority,
 } from "./api-contract";
 import { createUniqueTaskId } from "./task-id";
 
@@ -15,6 +16,7 @@ export interface RuntimeCreateTaskInput {
 	autoReviewMode?: RuntimeTaskAutoReviewMode;
 	images?: RuntimeTaskImage[];
 	baseRef: string;
+	priority?: RuntimeTaskPriority;
 }
 
 export interface RuntimeUpdateTaskInput {
@@ -24,6 +26,7 @@ export interface RuntimeUpdateTaskInput {
 	autoReviewMode?: RuntimeTaskAutoReviewMode;
 	images?: RuntimeTaskImage[];
 	baseRef: string;
+	priority?: RuntimeTaskPriority;
 }
 
 function normalizeTaskAutoReviewMode(value: RuntimeTaskAutoReviewMode | null | undefined): RuntimeTaskAutoReviewMode {
@@ -280,6 +283,7 @@ export function addTaskToColumn(
 		autoReviewMode: normalizeTaskAutoReviewMode(input.autoReviewMode),
 		images: cloneTaskImages(input.images),
 		baseRef,
+		...(input.priority !== undefined ? { priority: input.priority } : {}),
 		createdAt: now,
 		updatedAt: now,
 	};
@@ -593,6 +597,7 @@ export function updateTask(
 				autoReviewMode: normalizeTaskAutoReviewMode(input.autoReviewMode),
 				images: input.images === undefined ? card.images : cloneTaskImages(input.images),
 				baseRef,
+				priority: input.priority !== undefined ? input.priority : card.priority,
 				updatedAt: now,
 			};
 			return updatedTask;

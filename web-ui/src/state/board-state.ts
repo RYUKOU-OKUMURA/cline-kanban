@@ -15,6 +15,7 @@ import {
 	resolveTaskAutoReviewMode,
 	type TaskAutoReviewMode,
 	type TaskImage,
+	type TaskPriority,
 } from "@/types";
 
 export interface TaskDraft {
@@ -24,12 +25,44 @@ export interface TaskDraft {
 	autoReviewMode?: TaskAutoReviewMode;
 	images?: TaskImage[];
 	baseRef: string;
+	priority?: TaskPriority;
 }
 
 export interface TaskMoveEvent {
 	taskId: string;
 	fromColumnId: BoardColumnId;
 	toColumnId: BoardColumnId;
+}
+
+const PRIORITY_SORT_ORDER: Record<TaskPriority, number> = { high: 0, medium: 1, low: 2 };
+
+function sortBacklogCards(cards: BoardCard[]): BoardCard[] {
+	return [...cards].sort((a, b) => {
+		const aOrder = a.priority !== undefined ? PRIORITY_SORT_ORDER[a.priority] : 3;
+		const bOrder = b.priority !== undefined ? PRIORITY_SORT_ORDER[b.priority] : 3;
+		if (aOrder !== bOrder) {
+			return aOrder - bOrder;
+		}
+		return a.createdAt - b.createdAt;
+	});
+}
+
+function applyBacklogSort(board: BoardData): BoardData {
+	const backlogIndex = board.columns.findIndex((col) => col.id === "backlog");
+	if (backlogIndex === -1) {
+		return board;
+	}
+	const backlog = board.columns[backlogIndex];
+	if (!backlog) {
+		return board;
+	}
+	const sorted = sortBacklogCards(backlog.cards);
+	if (sorted.every((card, i) => card === backlog.cards[i])) {
+		return board;
+	}
+	const columns = [...board.columns];
+	columns[backlogIndex] = { ...backlog, cards: sorted };
+	return { ...board, columns };
 }
 
 function reorder<T>(list: T[], startIndex: number, endIndex: number): T[] {
@@ -105,6 +138,7 @@ function normalizeCard(rawCard: unknown): BoardCard | null {
 		autoReviewMode?: unknown;
 		images?: unknown;
 		baseRef?: unknown;
+		priority?: unknown;
 		createdAt?: unknown;
 		updatedAt?: unknown;
 	};
@@ -119,6 +153,11 @@ function normalizeCard(rawCard: unknown): BoardCard | null {
 
 	const now = Date.now();
 
+	const priority =
+		card.priority === "high" || card.priority === "medium" || card.priority === "low"
+			? card.priority
+			: undefined;
+
 	return {
 		id: typeof card.id === "string" && card.id ? card.id : createShortTaskId(createBrowserUuid),
 		prompt,
@@ -129,6 +168,7 @@ function normalizeCard(rawCard: unknown): BoardCard | null {
 		),
 		images: normalizeTaskImages(card.images),
 		baseRef,
+		...(priority !== undefined ? { priority } : {}),
 		createdAt: typeof card.createdAt === "number" ? card.createdAt : now,
 		updatedAt: typeof card.updatedAt === "number" ? card.updatedAt : now,
 	};
@@ -241,10 +281,10 @@ export function normalizeBoardData(rawBoard: unknown): BoardData | null {
 		}
 	}
 
-	return runtimeTaskState.updateTaskDependencies({
+	return applyBacklogSort(runtimeTaskState.updateTaskDependencies({
 		columns: normalizedColumns,
 		dependencies: normalizedDependencies,
-	});
+	}));
 }
 
 export function addTaskToColumn(board: BoardData, columnId: BoardColumnId, draft: TaskDraft): BoardData {
@@ -274,11 +314,12 @@ export function addTaskToColumnWithResult(
 			autoReviewMode: draft.autoReviewMode,
 			images: draft.images,
 			baseRef: draft.baseRef,
+			priority: draft.priority,
 		},
 		createBrowserUuid,
 	);
 	return {
-		board: result.board,
+		board: columnId === "backlog" ? applyBacklogSort(result.board) : result.board,
 		task: result.task,
 	};
 }
@@ -468,6 +509,7 @@ export function updateTask(board: BoardData, taskId: string, draft: TaskDraft): 
 							? draft.images.map((image) => ({ ...image }))
 							: undefined,
 				baseRef,
+				priority: draft.priority,
 				updatedAt: Date.now(),
 			};
 		});
@@ -477,7 +519,7 @@ export function updateTask(board: BoardData, taskId: string, draft: TaskDraft): 
 	if (!updated) {
 		return { board, updated: false };
 	}
-	return { board: withUpdatedColumns(board, columns), updated: true };
+	return { board: applyBacklogSort(withUpdatedColumns(board, columns)), updated: true };
 }
 
 export function disableTaskAutoReview(board: BoardData, taskId: string): { board: BoardData; updated: boolean } {
@@ -493,6 +535,7 @@ export function disableTaskAutoReview(board: BoardData, taskId: string): { board
 		autoReviewMode: DEFAULT_TASK_AUTO_REVIEW_MODE,
 		images: selection.card.images,
 		baseRef: selection.card.baseRef,
+		priority: selection.card.priority,
 	});
 }
 
