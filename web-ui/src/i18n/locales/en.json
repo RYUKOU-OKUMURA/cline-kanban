@@ -1,0 +1,203 @@
+{
+  "common": {
+    "cancel": "Cancel",
+    "save": "Save",
+    "saving": "Saving...",
+    "add": "Add",
+    "create": "Create",
+    "delete": "Delete",
+    "back": "Back",
+    "next": "Next",
+    "done": "Done",
+    "reset": "Reset",
+    "install": "Install",
+    "remove": "Remove",
+    "removing": "Removing...",
+    "settings": "Settings",
+    "close": "Close"
+  },
+  "board": {
+    "createTask": "Create task",
+    "createTaskShortcut": "(c)",
+    "startAllBacklogTasks": "Start all backlog tasks",
+    "backlogEmpty": "Backlog is empty",
+    "clearTrashPermanently": "Clear trash permanently",
+    "trashEmpty": "Trash is empty",
+    "backlog": "Backlog",
+    "inProgress": "In Progress",
+    "review": "Review",
+    "trash": "Trash"
+  },
+  "card": {
+    "seeMore": "See more",
+    "less": "Less",
+    "thinking": "Thinking...",
+    "waitingForReview": "Waiting for review",
+    "taskFailedToStart": "Task failed to start"
+  },
+  "taskCreate": {
+    "titleSingle": "New task",
+    "titleMulti": "New tasks",
+    "titleMultiWithCount": "New tasks ({{count}})",
+    "placeholder": "Describe the task...",
+    "fileReferenceHint": "Use <code>@file</code> to reference files. Drag and drop or <code>{{pasteLabel}}</code> to add images.",
+    "splitIntoTasks": "Split into {{count}} tasks",
+    "addTask": "Add task",
+    "backToSinglePrompt": "Back to single prompt",
+    "startInPlanMode": "Start in plan mode",
+    "worktreeBaseRef": "Worktree base ref",
+    "noBranchesDetected": "No branches detected",
+    "automatically": "Automatically",
+    "createMore": "Create more",
+    "createButton": "Create",
+    "createCountTasks_one": "Create {{count}} task",
+    "createCountTasks_other": "Create {{count}} tasks",
+    "startCountTasks_one": "Start {{count}} task",
+    "startCountTasks_other": "Start {{count}} tasks",
+    "startTask": "Start task",
+    "startAndOpen": "Start and open",
+    "autoReview": {
+      "makeCommit": "Make commit",
+      "makePr": "Make PR",
+      "moveToTrash": "Move to Trash"
+    },
+    "removeTaskAriaLabel": "Remove task {{index}}"
+  },
+  "clearTrash": {
+    "title": "Clear trash permanently?",
+    "description_one": "This will permanently delete {{count}} task from Trash.",
+    "description_other": "This will permanently delete {{count}} tasks from Trash.",
+    "cannotUndo": "This action cannot be undone.",
+    "clearButton": "Clear Trash"
+  },
+  "settings": {
+    "title": "Settings",
+    "global": "Global",
+    "agentRuntime": "Agent runtime",
+    "agentInstalled": "Installed",
+    "agentChecking": "Checking...",
+    "checkingInstalledAgents": "Checking which CLIs are installed for this project...",
+    "bypassPermissionsLabel": "Enable bypass permissions flag",
+    "bypassPermissionsHint": "Allows agents to use tools without stopping for permission. Use at your own risk.",
+    "gitButtonPrompts": "Git button prompts",
+    "gitButtonPromptsHint": "Modify the prompts sent to the agent when using Commit or Make PR on tasks in Review.",
+    "commitPromptPlaceholder": "Commit prompt template",
+    "prPromptPlaceholder": "PR prompt template",
+    "gitPromptVariableHint": "to reference {{description}}",
+    "copied": "Copied!",
+    "notifications": "Notifications",
+    "notifyWhenReadyForReview": "Notify when a task is ready for review",
+    "browserPermission": "Browser permission: {{status}}",
+    "notRequestedYet": "not requested yet",
+    "requestPermission": "Request permission",
+    "project": "Project",
+    "scriptShortcuts": "Script shortcuts",
+    "noShortcutsConfigured": "No shortcuts configured.",
+    "shortcutLabelPlaceholder": "Label",
+    "shortcutCommandPlaceholder": "Command",
+    "removeShortcutAriaLabel": "Remove shortcut {{label}}",
+    "gitPromptOptions": {
+      "commit": "Commit",
+      "makePr": "Make PR"
+    },
+    "saveErrors": {
+      "stillLoading": "Runtime settings are still loading. Try again in a moment.",
+      "agentNotInstalled": "Selected agent is not installed. Install it first or choose an installed agent.",
+      "chooseProvider": "Choose a Cline provider before saving.",
+      "couldNotSaveProvider": "Could not save Cline provider settings.",
+      "couldNotSaveMcp": "Could not save Cline MCP settings.",
+      "couldNotSave": "Could not save runtime settings. Check runtime logs and try again.",
+      "couldNotOpenFile": "Could not open file on host: {{message}}"
+    },
+    "language": "Language",
+    "languageOptions": {
+      "en": "English",
+      "ja": "日本語"
+    }
+  },
+  "topbar": {
+    "backToBoard": "Back to board",
+    "fetchFromUpstream": "Fetch latest refs from upstream without changing your local branch or files.",
+    "pullFromUpstream": "Pull from upstream",
+    "pushToUpstream": "Push to upstream",
+    "pullTooltip_upToDate": "Pull from upstream. Branch is already up to date.",
+    "pullTooltip_withCount_one": "Pull {{count}} commit from upstream into your local branch.",
+    "pullTooltip_withCount_other": "Pull {{count}} commits from upstream into your local branch.",
+    "pushTooltip_noPending": "Push local commits to upstream. No local commits are pending.",
+    "pushTooltip_withCount_one": "Push {{count}} local commit to upstream.",
+    "pushTooltip_withCount_other": "Push {{count}} local commits to upstream.",
+    "changedFiles_one": "{{count}} file",
+    "changedFiles_other": "{{count}} files",
+    "toggleTerminal": "Toggle terminal",
+    "openTerminal": "Open terminal",
+    "closeTerminal": "Close terminal",
+    "addShortcut": "Add shortcut",
+    "selectShortcut": "Select shortcut",
+    "run": "Run",
+    "detachedHead": "detached HEAD",
+    "initializing": "initializing"
+  },
+  "shortcutDialog": {
+    "title": "Set up your first script shortcut",
+    "description1": "Script shortcuts run a command in the bottom terminal so you can quickly run and test your project.",
+    "description2": "You can always open Settings to add and manage more shortcuts later.",
+    "labelPlaceholder": "Label",
+    "commandPlaceholder": "npm run dev",
+    "defaultLabel": "Run",
+    "couldNotSave": "Could not save shortcut.",
+    "shortcutIconAriaLabel": "Shortcut icon: {{label}}"
+  },
+  "project": {
+    "addProject": "Add Project",
+    "projects": "Projects",
+    "kanbanAgent": "Kanban Agent",
+    "kanbanAgentHint": "Add tasks, link dependencies, break work down, and manage your board. Try asking to create and link some tasks to get started.",
+    "selectProjectForAgent": "Select a project to use the agent.",
+    "projectActions": "Project actions",
+    "deleteProject": "Delete",
+    "removeProject": "Remove Project",
+    "removeProjectTitle": "Remove Project",
+    "removeProjectDescription": "This will delete all project tasks ({{count}}), remove task workspaces/worktrees, and stop any running processes for this project.",
+    "cannotUndo": "This action cannot be undone.",
+    "addProjectTitle": "Add project"
+  },
+  "shortcuts": {
+    "newTask": "New task",
+    "startBacklogTasks": "Start backlog tasks",
+    "settings": "Settings (Select Agent)",
+    "holdToLinkTasks": "Hold to link tasks",
+    "toggleGitView": "Toggle git view",
+    "toggleTerminal": "Toggle terminal",
+    "togglePlanAct": "Toggle plan / act",
+    "startAndOpenTask": "Start and open task",
+    "expandTerminal": "Expand terminal",
+    "closeBack": "Close / back",
+    "less": "Less",
+    "allShortcuts": "All shortcuts"
+  },
+  "onboarding": {
+    "getStarted": "Get started",
+    "back": "Back",
+    "next": "Next",
+    "done": "Done",
+    "goToSlide": "Go to onboarding slide {{index}}",
+    "slides": {
+      "createTasks": {
+        "title": "Create tasks with Kanban",
+        "description": "Press c to create a task yourself, or talk to the sidebar Kanban agent to plan work for you. It can pull projects and issues from Linear and GitHub, then turn them into tasks your coding agent can pick up."
+      },
+      "autoCommit": {
+        "title": "Auto commit and link",
+        "description": "Create dependency chains of linked tasks that start one another automatically. Agents can auto commit their work as they finish, so you can orchestrate tasks in order and watch the board burn them down automatically."
+      },
+      "reviewChanges": {
+        "title": "Review changes with comments",
+        "description": "Your workflow will feel like writing tickets, reviewing code, and shipping. Watch the agent work next to real-time diffs, then click lines to leave comments like you're reviewing a PR."
+      },
+      "chooseAgent": {
+        "title": "Choose your agent",
+        "description": "Choose a coding agent to complete your tasks. You can change this anytime in Settings."
+      }
+    }
+  }
+}

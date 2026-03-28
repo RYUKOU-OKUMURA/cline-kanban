@@ -28,11 +28,9 @@ import type { TaskAutoReviewMode, TaskImage } from "@/types";
 import { isMacPlatform, pasteShortcutLabel } from "@/utils/platform";
 import { useRawLocalStorageValue } from "@/utils/react-use";
 
-const AUTO_REVIEW_MODE_OPTIONS: Array<{ value: TaskAutoReviewMode; label: string }> = [
-	{ value: "commit", label: "Make commit" },
-	{ value: "pr", label: "Make PR" },
-	{ value: "move_to_trash", label: "Move to Trash" },
-];
+import { useTranslation } from "@/i18n";
+
+const AUTO_REVIEW_MODE_OPTION_VALUES: readonly TaskAutoReviewMode[] = ["commit", "pr", "move_to_trash"];
 
 type TaskCreateStartAction = "start" | "start_and_open";
 
@@ -139,6 +137,12 @@ export function TaskCreateDialog({
 	branchOptions: BranchSelectOption[];
 	onBranchRefChange: (value: string) => void;
 }): ReactElement {
+	const { t } = useTranslation();
+	const autoReviewModeOptions = [
+		{ value: "commit" as TaskAutoReviewMode, label: t("taskCreate.autoReview.makeCommit") },
+		{ value: "pr" as TaskAutoReviewMode, label: t("taskCreate.autoReview.makePr") },
+		{ value: "move_to_trash" as TaskAutoReviewMode, label: t("taskCreate.autoReview.moveToTrash") },
+	];
 	const [mode, setMode] = useState<"single" | "multi">("single");
 	const [createMore, setCreateMore] = useState(false);
 	const [composerResetKey, setComposerResetKey] = useState(0);
@@ -376,12 +380,12 @@ export function TaskCreateDialog({
 		[open, mode, handleRunSingleStartAction, onCreateStartAndOpen],
 	);
 
-	const dialogTitle = mode === "multi" ? `New tasks${validTaskCount > 0 ? ` (${validTaskCount})` : ""}` : "New task";
+	const dialogTitle = mode === "multi" ? (validTaskCount > 0 ? t("taskCreate.titleMultiWithCount", { count: validTaskCount }) : t("taskCreate.titleMulti")) : t("taskCreate.titleSingle");
 
-	const taskCountLabel = validTaskCount === 1 ? "task" : "tasks";
-	const primaryStartLabel = effectivePrimaryStartAction === "start" ? "Start task" : "Start and open";
+
+	const primaryStartLabel = effectivePrimaryStartAction === "start" ? t("taskCreate.startTask") : t("taskCreate.startAndOpen");
 	const primaryStartShortcutModifier = effectivePrimaryStartAction === "start" ? "mod" : "alt";
-	const secondaryStartLabel = secondaryStartAction === "start" ? "Start task" : "Start and open";
+	const secondaryStartLabel = secondaryStartAction === "start" ? t("taskCreate.startTask") : t("taskCreate.startAndOpen");
 	const secondaryStartShortcutModifier = secondaryStartAction === "start" ? "mod" : "alt";
 
 	return (
@@ -398,7 +402,7 @@ export function TaskCreateDialog({
 							onImagesChange={onImagesChange}
 							onSubmit={handleCreateSingle}
 							onSubmitAndStart={() => handleRunSingleStartAction("start")}
-							placeholder="Describe the task..."
+							placeholder={t("taskCreate.placeholder")}
 							autoFocus
 							workspaceId={workspaceId}
 							showAttachImageButton={false}
@@ -419,7 +423,7 @@ export function TaskCreateDialog({
 									className="inline-flex items-center gap-1.5 text-[12px] text-status-blue hover:text-[#86BEFF] cursor-pointer shrink-0"
 								>
 									<List size={12} />
-									Split into {detectedItems.length} tasks
+									{t("taskCreate.splitIntoTasks", { count: detectedItems.length })}
 								</button>
 							) : null}
 						</div>
@@ -438,7 +442,7 @@ export function TaskCreateDialog({
 										value={taskPrompt}
 										onChange={(e) => handleUpdateTaskPrompt(index, e.target.value)}
 										onKeyDown={(e) => handleInputKeyDown(index, e)}
-										placeholder="Describe the task..."
+										placeholder={t("taskCreate.placeholder")}
 										className="flex-1 min-w-0 rounded-md border border-border bg-surface-2 px-2.5 py-1.5 text-[13px] text-text-primary placeholder:text-text-tertiary focus:border-border-focus focus:outline-none"
 									/>
 									<Button
@@ -446,7 +450,7 @@ export function TaskCreateDialog({
 										size="sm"
 										icon={<X size={14} />}
 										onClick={() => handleRemoveTask(index)}
-										aria-label={`Remove task ${index + 1}`}
+										aria-label={t("taskCreate.removeTaskAriaLabel", { index: index + 1 })}
 									/>
 								</div>
 							))}
@@ -458,7 +462,7 @@ export function TaskCreateDialog({
 								className="inline-flex items-center gap-1.5 text-[12px] text-text-secondary hover:text-text-primary cursor-pointer"
 							>
 								<Plus size={12} />
-								Add task
+								{t("taskCreate.addTask")}
 							</button>
 							<button
 								type="button"
@@ -466,7 +470,7 @@ export function TaskCreateDialog({
 								className="inline-flex items-center gap-1.5 text-[12px] text-text-secondary hover:text-text-primary cursor-pointer"
 							>
 								<ArrowLeft size={12} />
-								Back to single prompt
+								{t("taskCreate.backToSinglePrompt")}
 							</button>
 						</div>
 					</div>
@@ -492,14 +496,14 @@ export function TaskCreateDialog({
 					</label>
 
 					<div>
-						<span className="text-[11px] text-text-secondary block mb-1">Worktree base ref</span>
+						<span className="text-[11px] text-text-secondary block mb-1">{t("taskCreate.worktreeBaseRef")}</span>
 						<BranchSelectDropdown
 							options={branchOptions}
 							selectedValue={branchRef}
 							onSelect={onBranchRefChange}
 							fill
 							size="sm"
-							emptyText="No branches detected"
+							emptyText={t("taskCreate.noBranchesDetected")}
 						/>
 					</div>
 
@@ -527,7 +531,7 @@ export function TaskCreateDialog({
 								className="h-7 appearance-none rounded-md border border-border-bright bg-surface-2 pl-2 pr-7 text-[12px] text-text-primary cursor-pointer focus:border-border-focus focus:outline-none"
 								style={{ width: "16ch", maxWidth: "100%" }}
 							>
-								{AUTO_REVIEW_MODE_OPTIONS.map((option) => (
+								{autoReviewModeOptions.map((option) => (
 									<option key={option.value} value={option.value}>
 										{option.label}
 									</option>
@@ -554,7 +558,7 @@ export function TaskCreateDialog({
 					>
 						<RadixSwitch.Thumb className="block h-4 w-4 rounded-full bg-white shadow-sm transition-transform translate-x-0.5 data-[state=checked]:translate-x-[18px]" />
 					</RadixSwitch.Root>
-					<span>Create more</span>
+					<span>{t("taskCreate.createMore")}</span>
 				</label>
 				{mode === "single" ? (
 					<>
@@ -629,7 +633,7 @@ export function TaskCreateDialog({
 					<>
 						<Button size="sm" onClick={handleCreateAll} disabled={validTaskCount === 0 || !branchRef}>
 							<span className="inline-flex items-center">
-								Create {validTaskCount} {taskCountLabel}
+								{t("taskCreate.createCountTasks", { count: validTaskCount })}
 								<ButtonShortcut />
 							</span>
 						</Button>
@@ -641,7 +645,7 @@ export function TaskCreateDialog({
 								disabled={validTaskCount === 0 || !branchRef}
 							>
 								<span className="inline-flex items-center">
-									Start {validTaskCount} {taskCountLabel}
+									{t("taskCreate.startCountTasks", { count: validTaskCount })}
 									<ButtonShortcut includeShift />
 								</span>
 							</Button>

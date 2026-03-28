@@ -1,0 +1,203 @@
+{
+  "common": {
+    "cancel": "キャンセル",
+    "save": "保存",
+    "saving": "保存中...",
+    "add": "追加",
+    "create": "作成",
+    "delete": "削除",
+    "back": "戻る",
+    "next": "次へ",
+    "done": "完了",
+    "reset": "リセット",
+    "install": "インストール",
+    "remove": "削除",
+    "removing": "削除中...",
+    "settings": "設定",
+    "close": "閉じる"
+  },
+  "board": {
+    "createTask": "タスクを作成",
+    "createTaskShortcut": "(c)",
+    "startAllBacklogTasks": "バックログのタスクをすべて開始",
+    "backlogEmpty": "バックログは空です",
+    "clearTrashPermanently": "ゴミ箱を完全に削除",
+    "trashEmpty": "ゴミ箱は空です",
+    "backlog": "バックログ",
+    "inProgress": "進行中",
+    "review": "レビュー",
+    "trash": "ゴミ箱"
+  },
+  "card": {
+    "seeMore": "もっと見る",
+    "less": "閉じる",
+    "thinking": "考え中...",
+    "waitingForReview": "レビュー待ち",
+    "taskFailedToStart": "タスクの起動に失敗しました"
+  },
+  "taskCreate": {
+    "titleSingle": "新しいタスク",
+    "titleMulti": "新しいタスク",
+    "titleMultiWithCount": "新しいタスク ({{count}})",
+    "placeholder": "タスクを説明してください...",
+    "fileReferenceHint": "<code>@file</code> でファイルを参照できます。ドラッグ＆ドロップまたは <code>{{pasteLabel}}</code> で画像を追加できます。",
+    "splitIntoTasks": "{{count}} 個のタスクに分割",
+    "addTask": "タスクを追加",
+    "backToSinglePrompt": "単一入力に戻る",
+    "startInPlanMode": "プランモードで開始",
+    "worktreeBaseRef": "ワークツリーのベースref",
+    "noBranchesDetected": "ブランチが見つかりません",
+    "automatically": "自動的に",
+    "createMore": "続けて作成",
+    "createButton": "作成",
+    "createCountTasks_one": "{{count}} 件のタスクを作成",
+    "createCountTasks_other": "{{count}} 件のタスクを作成",
+    "startCountTasks_one": "{{count}} 件のタスクを開始",
+    "startCountTasks_other": "{{count}} 件のタスクを開始",
+    "startTask": "タスクを開始",
+    "startAndOpen": "開始して開く",
+    "autoReview": {
+      "makeCommit": "コミットを作成",
+      "makePr": "PRを作成",
+      "moveToTrash": "ゴミ箱に移動"
+    },
+    "removeTaskAriaLabel": "タスク {{index}} を削除"
+  },
+  "clearTrash": {
+    "title": "ゴミ箱を完全に削除しますか？",
+    "description_one": "ゴミ箱から {{count}} 件のタスクが完全に削除されます。",
+    "description_other": "ゴミ箱から {{count}} 件のタスクが完全に削除されます。",
+    "cannotUndo": "この操作は元に戻せません。",
+    "clearButton": "ゴミ箱を削除"
+  },
+  "settings": {
+    "title": "設定",
+    "global": "グローバル",
+    "agentRuntime": "エージェントランタイム",
+    "agentInstalled": "インストール済み",
+    "agentChecking": "確認中...",
+    "checkingInstalledAgents": "このプロジェクトにインストールされているCLIを確認中...",
+    "bypassPermissionsLabel": "権限バイパスフラグを有効にする",
+    "bypassPermissionsHint": "エージェントが許可なくツールを使用できるようになります。自己責任で使用してください。",
+    "gitButtonPrompts": "Gitボタンのプロンプト",
+    "gitButtonPromptsHint": "レビュー中のタスクでコミットまたはPR作成を使用する際にエージェントに送信するプロンプトを変更します。",
+    "commitPromptPlaceholder": "コミットプロンプトのテンプレート",
+    "prPromptPlaceholder": "PRプロンプトのテンプレート",
+    "gitPromptVariableHint": "で {{description}} を参照できます",
+    "copied": "コピーしました！",
+    "notifications": "通知",
+    "notifyWhenReadyForReview": "タスクがレビュー待ちになったときに通知する",
+    "browserPermission": "ブラウザ権限: {{status}}",
+    "notRequestedYet": "未リクエスト",
+    "requestPermission": "権限をリクエスト",
+    "project": "プロジェクト",
+    "scriptShortcuts": "スクリプトショートカット",
+    "noShortcutsConfigured": "ショートカットが設定されていません。",
+    "shortcutLabelPlaceholder": "ラベル",
+    "shortcutCommandPlaceholder": "コマンド",
+    "removeShortcutAriaLabel": "ショートカット {{label}} を削除",
+    "gitPromptOptions": {
+      "commit": "コミット",
+      "makePr": "PRを作成"
+    },
+    "saveErrors": {
+      "stillLoading": "ランタイム設定を読み込み中です。しばらくしてから再試行してください。",
+      "agentNotInstalled": "選択したエージェントがインストールされていません。インストールするか、インストール済みのエージェントを選択してください。",
+      "chooseProvider": "保存する前にClineプロバイダーを選択してください。",
+      "couldNotSaveProvider": "Clineプロバイダー設定を保存できませんでした。",
+      "couldNotSaveMcp": "Cline MCP設定を保存できませんでした。",
+      "couldNotSave": "ランタイム設定を保存できませんでした。ランタイムログを確認して再試行してください。",
+      "couldNotOpenFile": "ホストでファイルを開けませんでした: {{message}}"
+    },
+    "language": "言語",
+    "languageOptions": {
+      "en": "English",
+      "ja": "日本語"
+    }
+  },
+  "topbar": {
+    "backToBoard": "ボードに戻る",
+    "fetchFromUpstream": "ローカルブランチやファイルを変更せずに、アップストリームから最新のrefを取得します。",
+    "pullFromUpstream": "アップストリームからプル",
+    "pushToUpstream": "アップストリームへプッシュ",
+    "pullTooltip_upToDate": "アップストリームからプル。ブランチはすでに最新です。",
+    "pullTooltip_withCount_one": "アップストリームから {{count}} 件のコミットをローカルブランチにプルします。",
+    "pullTooltip_withCount_other": "アップストリームから {{count}} 件のコミットをローカルブランチにプルします。",
+    "pushTooltip_noPending": "ローカルコミットをアップストリームへプッシュ。保留中のローカルコミットはありません。",
+    "pushTooltip_withCount_one": "{{count}} 件のローカルコミットをアップストリームへプッシュします。",
+    "pushTooltip_withCount_other": "{{count}} 件のローカルコミットをアップストリームへプッシュします。",
+    "changedFiles_one": "{{count}} ファイル",
+    "changedFiles_other": "{{count}} ファイル",
+    "toggleTerminal": "ターミナルの表示切替",
+    "openTerminal": "ターミナルを開く",
+    "closeTerminal": "ターミナルを閉じる",
+    "addShortcut": "ショートカットを追加",
+    "selectShortcut": "ショートカットを選択",
+    "run": "実行",
+    "detachedHead": "detached HEAD",
+    "initializing": "初期化中"
+  },
+  "shortcutDialog": {
+    "title": "最初のスクリプトショートカットを設定",
+    "description1": "スクリプトショートカットは下部のターミナルでコマンドを実行し、プロジェクトを素早く実行・テストできます。",
+    "description2": "設定を開けば、いつでもショートカットを追加・管理できます。",
+    "labelPlaceholder": "ラベル",
+    "commandPlaceholder": "npm run dev",
+    "defaultLabel": "実行",
+    "couldNotSave": "ショートカットを保存できませんでした。",
+    "shortcutIconAriaLabel": "ショートカットアイコン: {{label}}"
+  },
+  "project": {
+    "addProject": "プロジェクトを追加",
+    "projects": "プロジェクト",
+    "kanbanAgent": "Kanbanエージェント",
+    "kanbanAgentHint": "タスクの追加、依存関係のリンク、作業の分解、ボードの管理ができます。タスクを作成してリンクするよう話しかけてみてください。",
+    "selectProjectForAgent": "エージェントを使用するにはプロジェクトを選択してください。",
+    "projectActions": "プロジェクトの操作",
+    "deleteProject": "削除",
+    "removeProject": "プロジェクトを削除",
+    "removeProjectTitle": "プロジェクトを削除",
+    "removeProjectDescription": "このプロジェクトのすべてのタスク（{{count}}件）を削除し、タスクのワークスペース・ワークツリーを削除して、実行中のプロセスを停止します。",
+    "cannotUndo": "この操作は元に戻せません。",
+    "addProjectTitle": "プロジェクトを追加"
+  },
+  "shortcuts": {
+    "newTask": "新しいタスク",
+    "startBacklogTasks": "バックログタスクを開始",
+    "settings": "設定（エージェント選択）",
+    "holdToLinkTasks": "長押しでタスクをリンク",
+    "toggleGitView": "Gitビューの切替",
+    "toggleTerminal": "ターミナルの切替",
+    "togglePlanAct": "プラン／アクトの切替",
+    "startAndOpenTask": "タスクを開始して開く",
+    "expandTerminal": "ターミナルを拡大",
+    "closeBack": "閉じる／戻る",
+    "less": "閉じる",
+    "allShortcuts": "すべてのショートカット"
+  },
+  "onboarding": {
+    "getStarted": "はじめる",
+    "back": "戻る",
+    "next": "次へ",
+    "done": "完了",
+    "goToSlide": "スライド {{index}} に移動",
+    "slides": {
+      "createTasks": {
+        "title": "Kanbanでタスクを作成",
+        "description": "c キーを押してタスクを自分で作成するか、サイドバーのKanbanエージェントに作業を計画してもらいましょう。LinearやGitHubからプロジェクトやIssueを取得して、コーディングエージェントが実行できるタスクに変換できます。"
+      },
+      "autoCommit": {
+        "title": "自動コミットとリンク",
+        "description": "リンクされたタスクの依存チェーンを作成し、自動的に次のタスクを開始します。エージェントは作業完了時に自動コミットできるため、タスクを順番にオーケストレーションして、ボードが自動的に進むのを見ることができます。"
+      },
+      "reviewChanges": {
+        "title": "コメント付きで変更をレビュー",
+        "description": "チケットを書いて、コードをレビューして、リリースするような感覚で作業できます。リアルタイムのdiffを見ながらエージェントの作業を確認し、PRをレビューするようにラインをクリックしてコメントを残せます。"
+      },
+      "chooseAgent": {
+        "title": "エージェントを選択",
+        "description": "タスクを完了するコーディングエージェントを選択してください。設定でいつでも変更できます。"
+      }
+    }
+  }
+}

@@ -14,6 +14,10 @@ import type {
 	RuntimeConfigResponse,
 } from "@/runtime/types";
 
+import type { TFunction } from "i18next";
+
+import { useTranslation } from "@/i18n";
+
 interface BaseOnboardingSlide {
 	kind: "media" | "agent-selection";
 	title: string;
@@ -45,6 +49,44 @@ interface OnboardingDoneResult {
 	message?: string;
 }
 
+export function getOnboardingSlides(t: TFunction): OnboardingSlide[] {
+	return [
+		{
+			kind: "media",
+			title: t("onboarding.slides.createTasks.title"),
+			description: t("onboarding.slides.createTasks.description"),
+			assetVideoUrl: "https://github.com/user-attachments/assets/4408930c-33cd-4af9-a343-e82b099eab8c",
+			assetAlt: "Talking to the sidebar Kanban agent to create tasks from Linear and GitHub",
+			assetWidthPx: 1908,
+			assetHeightPx: 720,
+		},
+		{
+			kind: "media",
+			title: t("onboarding.slides.autoCommit.title"),
+			description: t("onboarding.slides.autoCommit.description"),
+			assetVideoUrl: "https://github.com/user-attachments/assets/9a979242-bd22-4ac1-94c5-3ed5351a99d1",
+			assetAlt: "Linking task cards in Cline Kanban",
+			assetWidthPx: 1156,
+			assetHeightPx: 720,
+		},
+		{
+			kind: "media",
+			title: t("onboarding.slides.reviewChanges.title"),
+			description: t("onboarding.slides.reviewChanges.description"),
+			assetVideoUrl: "https://github.com/user-attachments/assets/17992035-c1ca-449a-a48b-bb094007f0a1",
+			assetAlt: "Leaving comments on code diffs in Cline Kanban",
+			assetWidthPx: 1616,
+			assetHeightPx: 1080,
+		},
+		{
+			kind: "agent-selection",
+			title: t("onboarding.slides.chooseAgent.title"),
+			description: t("onboarding.slides.chooseAgent.description"),
+		},
+	];
+}
+
+// Keep a static export for slide count (uses English as reference)
 export const TASK_START_ONBOARDING_SLIDES: OnboardingSlide[] = [
 	{
 		kind: "media",
@@ -324,17 +366,18 @@ export function TaskStartAgentOnboardingCarousel({
 	onClineSetupSaved?: () => void;
 	onDoneActionChange?: (action: (() => Promise<OnboardingDoneResult>) | null) => void;
 }): ReactElement {
+	const { t } = useTranslation();
 	const [activeAgentId, setActiveAgentId] = useState<RuntimeAgentId | null>(selectedAgentId);
 	const [selectionError, setSelectionError] = useState<string | null>(null);
 	const [clineSetupError, setClineSetupError] = useState<string | null>(null);
 	const selectionSavePromiseRef = useRef<Promise<AgentSelectionResult> | null>(null);
+	const localizedSlides = useMemo(() => getOnboardingSlides(t), [t]);
 
 	useEffect(() => {
 		setActiveAgentId(selectedAgentId);
 	}, [selectedAgentId]);
 
-	const currentSlide =
-		TASK_START_ONBOARDING_SLIDES[activeSlideIndex] ?? TASK_START_ONBOARDING_SLIDES[0] ?? FALLBACK_ONBOARDING_SLIDE;
+	const currentSlide = localizedSlides[activeSlideIndex] ?? localizedSlides[0] ?? FALLBACK_ONBOARDING_SLIDE;
 	const clineAuthenticated = isClineProviderAuthenticated(clineProviderSettings);
 	const clineSettings = useRuntimeSettingsClineController({
 		open,

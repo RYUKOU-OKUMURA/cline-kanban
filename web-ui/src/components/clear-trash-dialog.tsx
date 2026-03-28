@@ -1,5 +1,7 @@
 import type { ReactElement } from "react";
 
+import { useTranslation } from "@/i18n";
+
 import { Button } from "@/components/ui/button";
 import {
 	AlertDialog,
@@ -23,7 +25,7 @@ export function ClearTrashDialog({
 	onCancel: () => void;
 	onConfirm: () => void;
 }): ReactElement {
-	const taskLabel = taskCount === 1 ? "task" : "tasks";
+	const { t } = useTranslation();
 
 	return (
 		<AlertDialog
@@ -33,23 +35,23 @@ export function ClearTrashDialog({
 			}}
 		>
 			<AlertDialogHeader>
-				<AlertDialogTitle>Clear trash permanently?</AlertDialogTitle>
+				<AlertDialogTitle>{t("clearTrash.title")}</AlertDialogTitle>
 			</AlertDialogHeader>
 			<AlertDialogBody>
 				<AlertDialogDescription>
-					This will permanently delete {taskCount} {taskLabel} from Trash.
+					{t("clearTrash.description", { count: taskCount })}
 				</AlertDialogDescription>
-				<p className="text-text-primary">This action cannot be undone.</p>
+				<p className="text-text-primary">{t("clearTrash.cannotUndo")}</p>
 			</AlertDialogBody>
 			<AlertDialogFooter>
 				<AlertDialogCancel asChild>
 					<Button variant="default" onClick={onCancel}>
-						Cancel
+						{t("common.cancel")}
 					</Button>
 				</AlertDialogCancel>
 				<AlertDialogAction asChild>
 					<Button variant="danger" onClick={onConfirm}>
-						Clear Trash
+						{t("clearTrash.clearButton")}
 					</Button>
 				</AlertDialogAction>
 			</AlertDialogFooter>

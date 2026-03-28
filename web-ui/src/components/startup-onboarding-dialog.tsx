@@ -14,6 +14,8 @@ import type {
 	RuntimeConfigResponse,
 } from "@/runtime/types";
 
+import { useTranslation } from "@/i18n";
+
 export function StartupOnboardingDialog({
 	open,
 	onClose,
@@ -35,6 +37,7 @@ export function StartupOnboardingDialog({
 	runtimeConfig?: RuntimeConfigResponse | null;
 	onClineSetupSaved?: () => void;
 }): ReactElement {
+	const { t } = useTranslation();
 	const [onboardingSlideIndex, setOnboardingSlideIndex] = useState(0);
 	const [isCompletingOnboarding, setIsCompletingOnboarding] = useState(false);
 	const [onboardingDoneAction, setOnboardingDoneAction] = useState<
@@ -85,7 +88,7 @@ export function StartupOnboardingDialog({
 				if (!isOpen) onClose();
 			}}
 		>
-			<DialogHeader title="Get started" />
+			<DialogHeader title={t("onboarding.getStarted")} />
 			<DialogBody className="px-4 pt-2 pb-4">
 				<TaskStartAgentOnboardingCarousel
 					open={open}
@@ -107,7 +110,7 @@ export function StartupOnboardingDialog({
 					disabled={isFirstOnboardingSlide || isCompletingOnboarding}
 				>
 					<ChevronLeft size={14} />
-					Back
+					{t("onboarding.back")}
 				</Button>
 				<div className="mx-auto flex items-center gap-1">
 					{TASK_START_ONBOARDING_SLIDES.map((_, index) =>
@@ -127,7 +130,7 @@ export function StartupOnboardingDialog({
 					)}
 				</div>
 				<Button size="sm" variant="primary" onClick={handleAdvanceOnboarding} disabled={isCompletingOnboarding}>
-					{isLastOnboardingSlide ? "Done" : "Next"}
+					{isLastOnboardingSlide ? t("onboarding.done") : t("onboarding.next")}
 					{isLastOnboardingSlide ? null : <ChevronRight size={14} />}
 				</Button>
 			</DialogFooter>

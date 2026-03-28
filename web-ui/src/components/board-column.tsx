@@ -2,6 +2,8 @@ import { Droppable } from "@hello-pangea/dnd";
 import { Play, Plus, Trash2 } from "lucide-react";
 import type { MouseEvent as ReactMouseEvent, ReactNode } from "react";
 
+import { useTranslation } from "@/i18n";
+
 import { BoardCard } from "@/components/board-card";
 import { Button } from "@/components/ui/button";
 import { ColumnIndicator } from "@/components/ui/column-indicator";
@@ -66,6 +68,7 @@ export function BoardColumn({
 	isDependencyLinking?: boolean;
 	workspacePath?: string | null;
 }): React.ReactElement {
+	const { t } = useTranslation();
 	const canCreate = column.id === "backlog" && onCreateTask;
 	const canStartAllTasks = column.id === "backlog" && onStartAllTasks;
 	const canClearTrash = column.id === "trash" && onClearTrash;
@@ -76,9 +79,9 @@ export function BoardColumn({
 	});
 	const createTaskButtonText = (
 		<span className="inline-flex items-center gap-1.5">
-			<span>Create task</span>
+			<span>{t("board.createTask")}</span>
 			<span aria-hidden className="text-text-secondary">
-				(c)
+				{t("board.createTaskShortcut")}
 			</span>
 		</span>
 	);
@@ -135,7 +138,7 @@ export function BoardColumn({
 							{canCreate ? (
 								<Button
 									icon={<Plus size={14} />}
-									aria-label="Create task"
+									aria-label={t("board.createTask")}
 									fill
 									onClick={onCreateTask}
 									style={{ marginBottom: 6, flexShrink: 0 }}

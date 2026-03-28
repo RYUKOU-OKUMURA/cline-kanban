@@ -15,6 +15,8 @@ import type { BoardCard as BoardCardModel, BoardColumnId } from "@/types";
 import { getTaskAutoReviewCancelButtonLabel } from "@/types";
 import { formatPathForDisplay } from "@/utils/path-display";
 import { useMeasure } from "@/utils/react-use";
+
+import { useTranslation } from "@/i18n";
 import {
 	clampTextWithInlineSuffix,
 	splitPromptToTitleDescriptionByWidth,
@@ -38,9 +40,7 @@ const SESSION_ACTIVITY_COLOR = {
 
 const DESCRIPTION_COLLAPSE_LINES = 3;
 const SESSION_PREVIEW_COLLAPSE_LINES = 6;
-const DESCRIPTION_EXPAND_LABEL = "See more";
-const DESCRIPTION_COLLAPSE_LABEL = "Less";
-const DESCRIPTION_COLLAPSE_SUFFIX = `… ${DESCRIPTION_EXPAND_LABEL}`;
+
 
 function reconstructTaskWorktreeDisplayPath(taskId: string, workspacePath: string | null | undefined): string | null {
 	if (!workspacePath) {
@@ -233,6 +233,10 @@ export function BoardCard({
 	isDependencyLinking?: boolean;
 	workspacePath?: string | null;
 }): React.ReactElement {
+	const { t } = useTranslation();
+	const DESCRIPTION_EXPAND_LABEL = t("card.seeMore");
+	const DESCRIPTION_COLLAPSE_LABEL = t("card.less");
+	const DESCRIPTION_COLLAPSE_SUFFIX = `… ${DESCRIPTION_EXPAND_LABEL}`;
 	const [isHovered, setIsHovered] = useState(false);
 	const [titleContainerRef, titleRect] = useMeasure<HTMLDivElement>();
 	const [descriptionContainerRef, descriptionRect] = useMeasure<HTMLDivElement>();

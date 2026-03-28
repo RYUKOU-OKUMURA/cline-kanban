@@ -1,6 +1,8 @@
 import ReactDOM from "react-dom/client";
 import { Toaster } from "sonner";
 
+import "@/i18n";
+
 import App from "@/App";
 import { AppErrorBoundary } from "@/components/app-error-boundary";
 import { TooltipProvider } from "@/components/ui/tooltip";

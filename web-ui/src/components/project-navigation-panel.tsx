@@ -22,6 +22,10 @@ import type { RuntimeProjectSummary } from "@/runtime/types";
 import { formatPathForDisplay } from "@/utils/path-display";
 import { isMacPlatform, modifierKeyLabel } from "@/utils/platform";
 
+import type { TFunction } from "i18next";
+
+import { useTranslation } from "@/i18n";
+
 interface TaskCountBadge {
 	id: string;
 	title: string;
@@ -55,6 +59,7 @@ export function ProjectNavigationPanel({
 	onRemoveProject: (projectId: string) => Promise<boolean>;
 	onAddProject: () => void;
 }): React.ReactElement {
+	const { t } = useTranslation();
 	const sortedProjects = [...projects].sort((a, b) => a.path.localeCompare(b.path));
 
 	const [pendingProjectRemoval, setPendingProjectRemoval] = useState<RuntimeProjectSummary | null>(null);
@@ -147,7 +152,7 @@ export function ProjectNavigationPanel({
 				})}
 				<button
 					type="button"
-					title="Add project"
+					title={t("project.addProjectTitle")}
 					onClick={onAddProject}
 					disabled={removingProjectId !== null}
 					className="w-8 h-8 rounded-md text-xs shrink-0 border-0 cursor-pointer flex items-center justify-center bg-transparent text-text-tertiary hover:text-text-secondary hover:bg-surface-2 mt-auto"
@@ -257,7 +262,7 @@ export function ProjectNavigationPanel({
 								disabled={removingProjectId !== null}
 							>
 								<Plus size={14} className="shrink-0" />
-								<span className="text-sm">Add Project</span>
+								<span className="text-sm">{t("project.addProject")}</span>
 							</button>
 						) : null}
 					</div>
@@ -268,7 +273,7 @@ export function ProjectNavigationPanel({
 					<div className="flex flex-1 min-h-0 overflow-hidden bg-surface-1 px-2 pb-2 pt-1">
 						{agentSectionContent ?? (
 							<div className="flex w-full items-center justify-center rounded-md border border-border bg-surface-2 px-3 text-center text-sm text-text-secondary">
-								Select a project to use the agent.
+								{t("project.selectProjectForAgent")}
 							</div>
 						)}
 					</div>
@@ -283,17 +288,16 @@ export function ProjectNavigationPanel({
 				}}
 			>
 				<AlertDialogHeader>
-					<AlertDialogTitle>Remove Project</AlertDialogTitle>
+					<AlertDialogTitle>{t("project.removeProjectTitle")}</AlertDialogTitle>
 				</AlertDialogHeader>
 				<AlertDialogBody>
 					<AlertDialogDescription asChild>
 						<div className="flex flex-col gap-3">
 							<p>{pendingProjectRemoval ? pendingProjectRemoval.name : "This project"}</p>
 							<p className="text-text-primary">
-								This will delete all project tasks ({pendingProjectTaskCount}), remove task
-								workspaces/worktrees, and stop any running processes for this project.
+								{t("project.removeProjectDescription", { count: pendingProjectTaskCount })}
 							</p>
-							<p className="text-text-primary">This action cannot be undone.</p>
+							<p className="text-text-primary">{t("project.cannotUndo")}</p>
 						</div>
 					</AlertDialogDescription>
 				</AlertDialogBody>
@@ -328,10 +332,10 @@ export function ProjectNavigationPanel({
 							{isProjectRemovalPending ? (
 								<>
 									<Spinner size={14} />
-									Removing...
+									{t("common.removing")}
 								</>
 							) : (
-								"Remove Project"
+								t("project.removeProject")
 							)}
 						</Button>
 					</AlertDialogAction>
@@ -344,21 +348,25 @@ export function ProjectNavigationPanel({
 const MOD = isMacPlatform ? "⌘" : modifierKeyLabel;
 const ALT = isMacPlatform ? "⌥" : "Alt";
 
-const ESSENTIAL_SHORTCUTS = [
-	{ keys: ["C"], label: "New task" },
-	{ keys: [MOD, "B"], label: "Start backlog tasks" },
-	{ keys: [MOD, "Shift", "S"], label: "Settings (Select Agent)" },
-	{ keys: ["Click", MOD], label: "Hold to link tasks" },
-	{ keys: [MOD, "G"], label: "Toggle git view" },
-	{ keys: [MOD, "J"], label: "Toggle terminal" },
-];
+function useEssentialShortcuts(t: TFunction) {
+	return [
+		{ keys: ["C"], label: t("shortcuts.newTask") },
+		{ keys: [MOD, "B"], label: t("shortcuts.startBacklogTasks") },
+		{ keys: [MOD, "Shift", "S"], label: t("shortcuts.settings") },
+		{ keys: ["Click", MOD], label: t("shortcuts.holdToLinkTasks") },
+		{ keys: [MOD, "G"], label: t("shortcuts.toggleGitView") },
+		{ keys: [MOD, "J"], label: t("shortcuts.toggleTerminal") },
+	];
+}
 
-const MORE_SHORTCUTS = [
-	{ keys: [MOD, "Shift", "A"], label: "Toggle plan / act" },
-	{ keys: [ALT, "Shift", "Enter"], label: "Start and open task" },
-	{ keys: [MOD, "M"], label: "Expand terminal" },
-	{ keys: ["Esc"], label: "Close / back" },
-];
+function useMoreShortcuts(t: TFunction) {
+	return [
+		{ keys: [MOD, "Shift", "A"], label: t("shortcuts.togglePlanAct") },
+		{ keys: [ALT, "Shift", "Enter"], label: t("shortcuts.startAndOpenTask") },
+		{ keys: [MOD, "M"], label: t("shortcuts.expandTerminal") },
+		{ keys: ["Esc"], label: t("shortcuts.closeBack") },
+	];
+}
 
 function ShortcutHint({ keys, label }: { keys: string[]; label: string }): React.ReactElement {
 	return (
@@ -374,20 +382,23 @@ function ShortcutHint({ keys, label }: { keys: string[]; label: string }): React
 }
 
 function ShortcutsCard(): React.ReactElement {
+	const { t } = useTranslation();
 	const [expanded, setExpanded] = useState(false);
+	const essentialShortcuts = useEssentialShortcuts(t);
+	const moreShortcuts = useMoreShortcuts(t);
 
 	return (
 		<div style={{ padding: "8px 12px" }}>
 			<div style={{ padding: "0 8px" }}>
 				<div className="flex flex-col gap-0.5">
-					{ESSENTIAL_SHORTCUTS.map((s) => (
+					{essentialShortcuts.map((s) => (
 						<ShortcutHint key={s.label} keys={s.keys} label={s.label} />
 					))}
 				</div>
 				<Collapsible.Root open={expanded} onOpenChange={setExpanded}>
 					<Collapsible.Content>
 						<div className="flex flex-col gap-0.5">
-							{MORE_SHORTCUTS.map((s) => (
+							{moreShortcuts.map((s) => (
 								<ShortcutHint key={s.label} keys={s.keys} label={s.label} />
 							))}
 						</div>
@@ -398,7 +409,7 @@ function ShortcutsCard(): React.ReactElement {
 							className="flex items-center gap-1 mt-1.5 text-xs text-text-tertiary hover:text-text-secondary cursor-pointer bg-transparent border-none p-0"
 						>
 							{expanded ? <ChevronUp size={11} /> : <ChevronDown size={11} />}
-							{expanded ? "Less" : "All shortcuts"}
+							{expanded ? t("shortcuts.less") : t("shortcuts.allShortcuts")}
 						</button>
 					</Collapsible.Trigger>
 				</Collapsible.Root>
@@ -457,6 +468,7 @@ function ProjectRow({
 	onSelect: (id: string) => void;
 	onRemove: (id: string) => void;
 }): React.ReactElement {
+	const { t } = useTranslation();
 	const displayPath = formatPathForDisplay(project.path);
 	const isRemovingProject = removingProjectId === project.id;
 	const hasAnyProjectRemoval = removingProjectId !== null;
@@ -561,7 +573,7 @@ function ProjectRow({
 							onClick={(e) => {
 								e.stopPropagation();
 							}}
-							aria-label="Project actions"
+							aria-label={t("project.projectActions")}
 						/>
 					</DropdownMenu.Trigger>
 					<DropdownMenu.Portal>
